@@ -20,11 +20,10 @@ st.write("Synthetic banking dataset for mine employees, SMEs, and digital channe
 # -------------------------
 # Navigation Tabs
 # -------------------------
-tab1, tab2, tab3, tab4 = st.tabs([
+tab1, tab2, tab3 = st.tabs([
     "📈 Dashboard",
     "🔍 EDA Explorer",
-    "📑 Summary Statistics",
-    "🗂️ Raw Data"
+    "📑 Summary Statistics"
 ])
 
 # ---------------------------------------------------
