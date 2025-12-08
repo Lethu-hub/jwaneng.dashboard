@@ -90,4 +90,4 @@ with tab3:
     st.subheader("Categorical Counts")
     for col in ["gender", "category", "channel", "is_mine_employee"]:
         st.write(f"### {col}")
-        st.write(df[col].value_count_
+        st.write(df[col].value_count_)
