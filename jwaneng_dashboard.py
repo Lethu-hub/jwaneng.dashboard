@@ -7,7 +7,6 @@ import plotly.express as px
 # -------------------------
 df = pd.read_csv("synthetic_jwaneng.csv", parse_dates=["date"])
 sme_df = pd.read_csv("sme_jwaneng.csv")
-df = load_data()
 
 st.title("📊 Jwaneng Branch Case Study Dashboard")
 st.write("Synthetic banking dataset for mine employees, SMEs and digital channel usage.")
