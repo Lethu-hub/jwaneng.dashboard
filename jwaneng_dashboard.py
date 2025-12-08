@@ -5,12 +5,8 @@ import plotly.express as px
 # -------------------------
 # Load Data From GitHub
 # -------------------------
-@st.cache_data
-def load_data():
-    url = "https://raw.githubusercontent.com/Olwethu-97/synthetic_jwaneng/main/synthetic_jwaneng_sampled.csv"
-    df = pd.read_csv(url, parse_dates=["date"])
-    return df
-
+df = pd.read_csv("synthetic_jwaneng.csv", parse_dates=["date"])
+sme_df = pd.read_csv("sme_jwaneng.csv")
 df = load_data()
 
 st.title("📊 Jwaneng Branch Case Study Dashboard")
