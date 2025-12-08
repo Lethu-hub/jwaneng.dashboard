@@ -3,13 +3,19 @@ import pandas as pd
 import plotly.express as px
 
 # -------------------------
-# Load Data From GitHub
+# Load CSVs
 # -------------------------
-df = pd.read_csv("synthetic_jwaneng.csv", parse_dates=["date"])
+df = pd.read_csv("synthetic_jwaneng.csv")
 sme_df = pd.read_csv("sme_jwaneng.csv")
 
+# Convert 'date' column to proper datetime
+df['date'] = pd.to_datetime(df['date'], errors='coerce')
+
+# -------------------------
+# App Title
+# -------------------------
 st.title("📊 Jwaneng Branch Case Study Dashboard")
-st.write("Synthetic banking dataset for mine employees, SMEs and digital channel usage.")
+st.write("Synthetic banking dataset for mine employees, SMEs, and digital channel usage.")
 
 # -------------------------
 # Navigation Tabs
@@ -36,36 +42,40 @@ with tab1:
             payroll_daily, x="date", y="amount",
             title="💰 Payroll Spikes (15th & Month End)"
         )
-        st.plotly_chart(fig_payroll, use_container_width=True)
+        st.plotly_chart(fig_payroll, width='stretch')
 
     # Channel distribution
     ch = df["channel"].value_counts().reset_index()
     ch.columns = ["channel", "count"]
 
-    fig_channel = px.bar(ch, x="channel", y="count",
-                         title="📱 Channel Usage Distribution")
-    st.plotly_chart(fig_channel, use_container_width=True)
+    fig_channel = px.bar(
+        ch, x="channel", y="count",
+        title="📱 Channel Usage Distribution"
+    )
+    st.plotly_chart(fig_channel, width='stretch')
 
     # Amount distribution
-    fig_amount = px.histogram(df, x="amount", nbins=50,
-                              title="💵 Transaction Amount Distribution")
-    st.plotly_chart(fig_amount, use_container_width=True)
+    fig_amount = px.histogram(
+        df, x="amount", nbins=50,
+        title="💵 Transaction Amount Distribution"
+    )
+    st.plotly_chart(fig_amount, width='stretch')
 
 # ---------------------------------------------------
 # TAB 2: EXPLORATORY DATA ANALYSIS
 # ---------------------------------------------------
 with tab2:
     st.header("🔍 Explore the Data Yourself")
-
     col1, col2 = st.columns(2)
 
     x_var = col1.selectbox("Select X variable", df.columns)
     y_var = col2.selectbox("Select Y variable", df.columns)
 
-    fig_custom = px.scatter(df, x=x_var, y=y_var,
-                            title=f"Scatter Plot: {x_var} vs {y_var}")
-    st.plotly_chart(fig_custom, use_container_width=True)
-
+    fig_custom = px.scatter(
+        df, x=x_var, y=y_var,
+        title=f"Scatter Plot: {x_var} vs {y_var}"
+    )
+    st.plotly_chart(fig_custom, width='stretch')
     st.markdown("Use this tool to explore correlations, trends, and anomalies.")
 
 # ---------------------------------------------------
@@ -80,18 +90,4 @@ with tab3:
     st.subheader("Categorical Counts")
     for col in ["gender", "category", "channel", "is_mine_employee"]:
         st.write(f"### {col}")
-        st.write(df[col].value_counts())
-
-# ---------------------------------------------------
-# TAB 4: RAW DATA
-# ---------------------------------------------------
-with tab4:
-    st.header("🗂️ Raw Dataset")
-    st.dataframe(df.head(500))  # Load only first 500 rows for performance
-
-    st.download_button(
-        label="⬇️ Download Full Dataset",
-        data=df.to_csv(index=False),
-        file_name="synthetic_jwaneng_sampled.csv",
-        mime="text/csv"
-    )
+        st.write(df[col].value_count_
