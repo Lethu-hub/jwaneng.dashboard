@@ -2,13 +2,14 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from scipy.stats import ttest_ind
+import os
 
 # -------------------------
 # Page Configuration
 # -------------------------
 st.set_page_config(
     page_title="Jwaneng Banking Dashboard",
-    layout="wide",  # full-width layout
+    layout="wide",
     initial_sidebar_state="expanded"
 )
 
@@ -18,10 +19,12 @@ st.set_page_config(
 df = pd.read_csv("synthetic_jwaneng.csv")
 sme_df = pd.read_csv("sme_jwaneng.csv")
 
-# Convert 'date' columns to datetime
-df['date'] = pd.to_datetime(df['date'], errors='coerce')
+# -------------------------
+# Clean and convert dates
+# -------------------------
+df['date'] = pd.to_datetime(df['date'], errors='coerce').dt.floor('s')
 if 'date' in sme_df.columns:
-    sme_df['date'] = pd.to_datetime(sme_df['date'], errors='coerce')
+    sme_df['date'] = pd.to_datetime(sme_df['date'], errors='coerce').dt.floor('s')
 
 # -------------------------
 # App Title
@@ -146,26 +149,34 @@ with tab3:
         st.write(df[col].value_counts())
 
 # ---------------------------------------------------
-# TAB 4: PROJECT FILES (Download PDFs)
+# TAB 4: PROJECT FILES (Download PDFs using __file__)
 # ---------------------------------------------------
 with tab4:
     st.header("📚 Project Documents")
     st.markdown("Download the full project files for details on the dataset, analysis, and notebook.")
 
-    # Case study explanation PDF
-    with open("Simple_Bank_Data_Project_Explanation.pdf", "rb") as f:
-        st.download_button(
-            label="Download Project Explanation PDF",
-            data=f,
-            file_name="Simple_Bank_Data_Project_Explanation.pdf",
-            mime="application/pdf"
-        )
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-    # Notebook/Analysis PDF
-    with open("Simple_Bank_Data_Analysis_Colab.pdf", "rb") as f:
-        st.download_button(
-            label="Download Analysis Notebook PDF",
-            data=f,
-            file_name="Simple_Bank_Data_Analysis_Colab.pdf",
-            mime="application/pdf"
-        )
+    pdf_explanation_path = os.path.join(BASE_DIR, "Simple_Bank_Data_Project_Explanation.pdf")
+    if os.path.exists(pdf_explanation_path):
+        with open(pdf_explanation_path, "rb") as f:
+            st.download_button(
+                label="Download Project Explanation PDF",
+                data=f,
+                file_name="Simple_Bank_Data_Project_Explanation.pdf",
+                mime="application/pdf"
+            )
+    else:
+        st.warning(f"File not found: {pdf_explanation_path}")
+
+    pdf_analysis_path = os.path.join(BASE_DIR, "Simple_Bank_Data_Analysis_Colab.pdf")
+    if os.path.exists(pdf_analysis_path):
+        with open(pdf_analysis_path, "rb") as f:
+            st.download_button(
+                label="Download Analysis Notebook PDF",
+                data=f,
+                file_name="Simple_Bank_Data_Analysis_Colab.pdf",
+                mime="application/pdf"
+            )
+    else:
+        st.warning(f"File not found: {pdf_analysis_path}")
