@@ -14,6 +14,17 @@ st.set_page_config(
 )
 
 # -------------------------
+# Helper function to safely load CSVs
+# -------------------------
+def load_csv(filename):
+    if not os.path.exists(filename):
+        st.warning(f"File not found: {filename}")
+        return pd.DataFrame()  # return empty DataFrame if file missing
+    df = pd.read_csv(filename)
+    if df.empty:
+        st.warning(f"File is empty: {filename}")
+    return df
+# -------------------------
 # Load & Clean CSVs
 # -------------------------
 df = load_csv("synthetic_jwaneng.csv")
