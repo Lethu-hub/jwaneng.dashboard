@@ -152,20 +152,20 @@ with tab4:
     st.header("📚 Project Documents")
     st.markdown("Download the full project files for details on the dataset, analysis, and notebook.")
 
-    # Case study PDF
-    with open("Jwaneng_Banking_Case_Study.pdf", "rb") as f:
+    # Case study explanation PDF
+    with open("Simple_Bank_Data_Project_Explanation.pdf", "rb") as f:
         st.download_button(
-            label="Download Case Study PDF",
+            label="Download Project Explanation PDF",
             data=f,
-            file_name="Jwaneng_Banking_Case_Study.pdf",
+            file_name="Simple_Bank_Data_Project_Explanation.pdf",
             mime="application/pdf"
         )
 
-    # Notebook PDF
-    with open("Notebook_Analysis.pdf", "rb") as f:
+    # Notebook/Analysis PDF
+    with open("Simple_Bank_Data_Analysis_Colab.pdf", "rb") as f:
         st.download_button(
-            label="Download Notebook PDF",
+            label="Download Analysis Notebook PDF",
             data=f,
-            file_name="Notebook_Analysis.pdf",
+            file_name="Simple_Bank_Data_Analysis_Colab.pdf",
             mime="application/pdf"
         )
