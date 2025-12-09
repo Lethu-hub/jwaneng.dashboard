@@ -16,8 +16,8 @@ st.set_page_config(
 # -------------------------
 # Load & Clean CSVs
 # -------------------------
-df = pd.read_csv("synthetic_jwaneng.csv")
-sme_df = pd.read_csv("sme_jwaneng.csv")
+df = load_csv("synthetic_jwaneng.csv")
+sme_df = load_csv("sme_jwaneng.csv")
 
 # Convert 'date' columns and round to seconds to avoid PyArrow errors
 df['date'] = pd.to_datetime(df['date'], errors='coerce').dt.floor('s')
