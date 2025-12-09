@@ -112,17 +112,55 @@ with tab1:
     cols[2].plotly_chart(fig9, width='stretch')
 
 # -------------------------
-# TAB 2: EDA Explorer
+# TAB 2: EDA Explorer (full interactive)
 # -------------------------
 with tab2:
-    st.header("Explore the Data")
+    st.header("🔍 Explore the Data")
     if not df.empty:
-        col1, col2 = st.columns(2)
-        x_var = col1.selectbox("Select X variable", df.columns)
-        y_var = col2.selectbox("Select Y variable", df.columns)
-        fig = px.scatter(df, x=x_var, y=y_var, title=f"{x_var} vs {y_var}")
-        st.plotly_chart(fig, width='stretch')
-        st.markdown("Use this tool to explore correlations, trends, and anomalies.")
+        st.markdown("Select variables, chart type, and options below:")
+
+        col1, col2, col3, col4 = st.columns(4)
+
+        # Variable selectors
+        x_var = col1.selectbox("X variable", df.columns)
+        y_var = col2.selectbox("Y variable (optional)", [None] + list(df.columns))
+        chart_type = col3.selectbox(
+            "Chart type",
+            ["Scatter", "Line", "Bar", "Cumulative Bar", "Cumulative Line",
+             "Histogram", "Pie", "Box", "Violin"]
+        )
+        cumulative = col4.checkbox("Cumulative?", value=False)
+
+        fig = None
+        # ---------------------
+        # Generate chart based on user selection
+        # ---------------------
+        if chart_type in ["Scatter", "Line", "Bar", "Cumulative Bar", "Cumulative Line"] and y_var:
+            plot_df = df.copy()
+            if cumulative and chart_type in ["Cumulative Bar", "Cumulative Line"]:
+                plot_df = plot_df.groupby(x_var)[y_var].sum().reset_index()
+                plot_df[y_var] = plot_df[y_var].cumsum()
+            if chart_type in ["Scatter"]:
+                fig = px.scatter(plot_df, x=x_var, y=y_var, title=f"Scatter: {x_var} vs {y_var}")
+            elif chart_type in ["Line", "Cumulative Line"]:
+                fig = px.line(plot_df, x=x_var, y=y_var, title=f"Line: {x_var} vs {y_var}")
+            elif chart_type in ["Bar", "Cumulative Bar"]:
+                fig = px.bar(plot_df, x=x_var, y=y_var, title=f"Bar: {x_var} vs {y_var}")
+        elif chart_type == "Histogram":
+            fig = px.histogram(df, x=x_var, title=f"Histogram: {x_var}")
+        elif chart_type == "Pie":
+            fig = px.pie(df, names=x_var, title=f"Pie: {x_var}")
+        elif chart_type == "Box":
+            if y_var:
+                fig = px.box(df, x=x_var, y=y_var, title=f"Box Plot: {x_var} vs {y_var}")
+        elif chart_type == "Violin":
+            if y_var:
+                fig = px.violin(df, x=x_var, y=y_var, title=f"Violin Plot: {x_var} vs {y_var}")
+
+        if fig:
+            st.plotly_chart(fig, width='stretch')
+        else:
+            st.info("Select a Y variable for this chart type if needed.")
 
 # -------------------------
 # TAB 3: Summary Statistics
